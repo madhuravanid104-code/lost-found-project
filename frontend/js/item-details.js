@@ -23,7 +23,11 @@ async function loadItemDetails() {
 
 function displayItemDetails(item) {
   document.getElementById('itemTitle').textContent = item.title;
-  document.getElementById('itemImage').src = item.image || 'https://via.placeholder.com/400x300?text=Item';
+  
+  // Fix image display - support both 'image' and 'image_url' fields
+  let imageUrl = item.image || item.image_url || 'https://via.placeholder.com/400x300?text=Item';
+  document.getElementById('itemImage').src = imageUrl;
+  
   document.getElementById('itemType').textContent = item.type.toUpperCase();
   document.getElementById('itemType').className = `badge ${item.type}`;
   document.getElementById('itemCategory').textContent = getCategoryLabel(item.category);
@@ -58,8 +62,12 @@ function displayItemDetails(item) {
   const deleteBtn = document.getElementById('deleteBtn');
 
   if (user) {
-    // Show claim button if item is available and user is not the poster
-    if (item.status === 'available' && item.postedBy !== user.id && !item.claimedBy) {
+    // Show claim button if item is open (not claimed) and user is not the poster
+    const isOpen = item.status === 'open' || item.status === 'available';
+    const isNotClaimed = !item.claimedBy;
+    const isNotPoster = item.postedBy !== user.id;
+    
+    if (isOpen && isNotClaimed && isNotPoster) {
       claimBtn.style.display = 'inline-block';
       claimBtn.addEventListener('click', () => claimItem(item.id));
     }
