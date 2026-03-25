@@ -99,7 +99,7 @@ function createItemCard(item) {
   return `
     <div class="item-card" onclick="window.location.href='item-details.html?id=${item.id}'">
       <div class="item-image">
-        <img src="${item.image || 'https://via.placeholder.com/400x300?text=Item'}" alt="${item.title}">
+        <img src="${item.image_url || 'https://via.placeholder.com/400x300?text=Item'}" alt="${item.title}">
       </div>
       <div class="item-body">
         <h4>${item.title}</h4>
