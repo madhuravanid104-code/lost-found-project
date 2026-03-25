@@ -99,7 +99,23 @@
 
         // Check if current user is the owner
         const user = getUser();
-        if (!user || item.postedBy !== user.id) {
+        
+        console.log('Edit authorization check:');
+        console.log('  item.postedBy:', item.postedBy, typeof item.postedBy);
+        console.log('  user.id:', user?.id, typeof user?.id);
+        console.log('  Match:', item.postedBy == user?.id);
+        
+        if (!user) {
+          alert('Please login first');
+          window.location.href = 'login.html';
+          return;
+        }
+        
+        // Convert to numbers for proper comparison (handle both string and number IDs)
+        const itemOwnerID = Number(item.postedBy);
+        const currentUserID = Number(user.id);
+        
+        if (itemOwnerID !== currentUserID) {
           alert('You can only edit your own items');
           window.location.href = 'dashboard.html';
           return;

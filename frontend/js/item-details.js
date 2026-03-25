@@ -62,10 +62,15 @@ function displayItemDetails(item) {
   const deleteBtn = document.getElementById('deleteBtn');
 
   if (user) {
+    // Convert IDs to numbers for proper comparison
+    const itemOwnerID = Number(item.postedBy);
+    const currentUserID = Number(user.id);
+    const isClaimed = !!item.claimedBy;
+    
     // Show claim button if item is open (not claimed) and user is not the poster
     const isOpen = item.status === 'open' || item.status === 'available';
-    const isNotClaimed = !item.claimedBy;
-    const isNotPoster = item.postedBy !== user.id;
+    const isNotClaimed = !isClaimed;
+    const isNotPoster = itemOwnerID !== currentUserID;
     
     if (isOpen && isNotClaimed && isNotPoster) {
       claimBtn.style.display = 'inline-block';
@@ -73,14 +78,14 @@ function displayItemDetails(item) {
     }
 
     // Show resolve button if user is the poster and item is claimed
-    if (item.postedBy === user.id && item.status === 'claimed') {
+    if (itemOwnerID === currentUserID && item.status === 'claimed') {
       resolveBtn.style.display = 'inline-block';
       resolveBtn.textContent = 'Mark as Resolved';
       resolveBtn.addEventListener('click', () => resolveItem(item.id));
     }
 
     // Show edit and delete buttons if user is the poster
-    if (item.postedBy === user.id) {
+    if (itemOwnerID === currentUserID) {
       editBtn.style.display = 'inline-block';
       deleteBtn.style.display = 'inline-block';
       editBtn.addEventListener('click', () => window.location.href = `edit-item.html?id=${item.id}`);
